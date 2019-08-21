@@ -65,8 +65,6 @@ variable "ec2_instance" {
 
 # How to use this
 
-## run terraform apply
-
 After you changed env vars for your need, apply the changes. The following infra will be created:
 - vpc
 - subnet
