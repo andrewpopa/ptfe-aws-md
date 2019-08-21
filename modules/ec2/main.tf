@@ -11,6 +11,13 @@ resource "aws_instance" "ptfe_cloud_prod_mode" {
   key_name                    = "${aws_key_pair.ec2.key_name}"
   subnet_id                   = "${var.subnet_id}"
   associate_public_ip_address = "true"
+
+  root_block_device {
+    volume_type = "${var.ec2_instance["root_hdd_type"]}"
+    volume_size = "${var.ec2_instance["root_hdd_size"]}"
+    delete_on_termination = true
+  }
+
   user_data = "${file("scripts/mount_ebs.sh")}"
 }
 
