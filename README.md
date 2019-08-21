@@ -16,6 +16,13 @@ will use:
 - [AWS](https://aws.amazon.com) account
   - we will use m5.large as [recommended](https://www.terraform.io/docs/enterprise/before-installing/reference-architecture/aws.html) type
 
+## clone the repository
+
+```
+git clone git@github.com:andrewpopa/ptfe-tf-prod-mode.git
+cd ptfe-tf-prod-mode
+```
+
 ## configure AWS credentials
 
 as ENV variables in my case
@@ -57,13 +64,6 @@ variable "ec2_instance" {
 ```
 
 # How to use this
-
-clone the repository
-
-```
-git clone git@github.com:andrewpopa/ptfe-tf-prod-mode.git
-cd ptfe-tf-prod-mode
-```
 
 ## run terraform apply
 
