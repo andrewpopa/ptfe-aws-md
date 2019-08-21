@@ -3,7 +3,7 @@
 PTFE deploy in production mode on AWS using Terraform with mounted disk type of installation
 
 will use:
-- mounted disk to `/mountdisk`
+- mounted disk for data to `/mountdisk`
 - mounted disk for snapshots to `/var/lib/replicated/snapshots`
 
 # Pre-requirements
