@@ -1,11 +1,31 @@
 #!/usr/bin/env bash
 
-sudo mkdir /mountdisk
-sudo mkfs -t ext4 /dev/nvme1n1
-sudo mount /dev/nvme1n1 /mountdisk
-sudo echo /dev/nvme1n1 /mountdisk defaults,nofail 0 2 >> /etc/fstab
+echo "looking for nvme1n1"
+while [ ! -b /dev/nvme1n1 ] ; do 
+  echo -n .
+  sleep 2
+done
 
-sudo mkdir -p /var/lib/replicated/snapshots
-sudo mkfs -t ext4 /dev/nvme2n1
-sudo mount /dev/nvme2n1 /var/lib/replicated/snapshots
-sudo echo /dev/nvme2n1 /var/lib/replicated/snapshots defaults,nofail 0 2 >> /etc/fstab
+mkdir -p /mountdisk
+blkid /dev/nvme1n1 || {
+    mkfs.ext4 /dev/nvme1n1 -L mountdisk
+    mount /dev/nvme1n1 /mountdisk
+    echo LABEL=mountdisk /dev/nvme1n1 /mountdisk ext4 defaults,nofail 0 2 >> /etc/fstab
+}
+
+echo "looking for nvme2n1"
+while [ ! -b /dev/nvme2n1 ] ; do 
+  echo -n .
+  sleep 2
+done
+
+mkdir -p /var/lib/replicated/snapshots
+blkid /dev/nvme2n1 || {
+    mkfs.ext4 /dev/nvme2n1 -L snapshots
+    mount /dev/nvme2n1 /var/lib/replicated/snapshots
+    echo LABEL=snapshots /dev/nvme2n1 /var/lib/replicated/snapshots ext4 defaults,nofail 0 2 >> /etc/fstab
+}
+
+mountpoint /mountdisk || mount -L mountdisk /mountdisk
+mountpoint /var/lib/replicated/snapshots || mount -L snapshots /var/lib/replicated/snapshots
+mount -a

@@ -34,6 +34,7 @@ resource "aws_volume_attachment" "ptfe_volume_db" {
 }
 
 resource "aws_ebs_volume" "ptfe_cloud_volume_replica" {
+  depends_on = ["aws_volume_attachment.ptfe_volume_db"]
   availability_zone = "${var.a_zone}"
   type              = "${var.ec2_instance["ebs_hdd_type"]}"
   size              = "${var.ec2_instance["ebs_hdd_size"]}"
