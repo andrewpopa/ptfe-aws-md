@@ -176,21 +176,23 @@ wait until all components will be downloaded and application will start
 
 once all components are downloaded and application is `started` you can open application
 
+also click on `Start snapshot` to create your first snapshot manually
+
 ![alt text](img/done.png "secure the admin console")
 
-and create new user account
+when you open your application create new user account
 
 ![alt text](img/new.png "secure the admin console")
 
-## create snapshot manually
+## automatic snapshots
 
-create a manual snapshot by clicking on button
+after snapshot will be created
 
 ![alt text](img/snap.png "start snapshot")
 
-## automatic snapshots
+go and configure automatic snapshots
 
-enable automatic snapshots by going to - `console settings`
+by going to - `console settings`
 
 click - `Enable Automatic Scheduled Snapshots`
 
