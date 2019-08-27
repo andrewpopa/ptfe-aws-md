@@ -27,6 +27,13 @@ cd ptfe-tf-prod-mode
 
 as ENV variables in my case
 
+```bash
+cat .bash_profile
+export AWS_ACCESS_KEY_ID=
+export AWS_SECRET_ACCESS_KEY=
+export AWS_DEFAULT_REGION=
+```
+
 ## configure networking vars
 
 check `modules/networking/variables.tf` you can modify the following parameters accordingly to your need 
@@ -174,5 +181,21 @@ once all components are downloaded and application is `started` you can open app
 and create new user account
 
 ![alt text](img/new.png "secure the admin console")
+
+## create snapshot manually
+
+create a manual snapshot by clicking on button
+
+![alt text](img/snap.png "start snapshot")
+
+## automatic snapshots
+
+enable automatic snapshots by going to - `console settings`
+
+click - `Enable Automatic Scheduled Snapshots`
+
+select - `Daily`
+
+![alt text](img/snap_auto.png "automatic snapshots")
 
 Enjoy!
