@@ -32,5 +32,3 @@ variable "subnet_id" {
 variable "a_zone" {
   default = ""
 }
-
-
