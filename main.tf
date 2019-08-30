@@ -12,3 +12,17 @@ module "ec2" {
   a_zone                 = "${module.networking.a_zone}"
   source                 = "./modules/ec2/"
 }
+
+# Silent installation or restore
+module "silent" {
+  private_ip = "${module.ec2.ptfe_private_ip}"
+  public_ip  = "${module.ec2.ptfe_public_ip}"
+  source     = "./modules/silent/"
+}
+
+
+# DNS
+module "dns" {
+  public_ip = "${module.ec2.ptfe_public_ip}"
+  source    = "./modules/dns/"
+}
