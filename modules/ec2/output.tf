@@ -9,3 +9,7 @@ output "ptfe_private_ip" {
 output "ptfe_dns" {
   value = "${aws_instance.ptfe_cloud_prod_mode.public_dns}"
 }
+
+output "ptfe_id" {
+  value = "${aws_instance.ptfe_cloud_prod_mode.id}"
+}
