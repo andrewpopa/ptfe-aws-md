@@ -15,3 +15,7 @@ variable "domain" {
 variable "public_ip" {
   default = ""
 }
+
+variable "alb_dns_name" {
+  default = ""
+}
