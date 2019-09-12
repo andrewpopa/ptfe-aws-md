@@ -6,7 +6,7 @@ provider "cloudflare" {
 resource "cloudflare_record" "ptfe" {
   domain = "${var.domain}"
   name   = "ptfe"
-  value  = "${var.public_ip}"
-  type   = "A"
+  value  = "${var.alb_dns_name}"
+  type   = "CNAME"
   ttl    = 1
 }
