@@ -18,4 +18,3 @@ variable "private_ip" {
 variable "public_ip" {
   default = ""
 }
-
