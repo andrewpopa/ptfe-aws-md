@@ -8,9 +8,13 @@ output "vpc_security_group_ids" {
 }
 
 output "subnet_id" {
-  value = "${aws_subnet.main_sub.id}"
+  value = "${aws_subnet.main_sub_a.id}"
 }
 
 output "a_zone" {
-  value = "${var.a_zone}"
+  value = "${var.a_zone_a}"
+}
+
+output "alb_dns_name" {
+  value = "${aws_lb.alb.dns_name}"
 }

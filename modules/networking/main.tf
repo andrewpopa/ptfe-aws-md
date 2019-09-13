@@ -10,13 +10,23 @@ resource "aws_vpc" "main_vpc" {
   }
 }
 
-resource "aws_subnet" "main_sub" {
+resource "aws_subnet" "main_sub_a" {
   vpc_id            = "${aws_vpc.main_vpc.id}"
-  cidr_block        = "${var.sub_block}"
-  availability_zone = "${var.a_zone}"
+  cidr_block        = "${var.sub_block_a}"
+  availability_zone = "${var.a_zone_a}"
 
   tags = {
-    Name = "ptfe-cloud-prod-mode"
+    Name = "ptfe-cloud-prod-mode-a"
+  }
+}
+
+resource "aws_subnet" "main_sub_b" {
+  vpc_id            = "${aws_vpc.main_vpc.id}"
+  cidr_block        = "${var.sub_block_b}"
+  availability_zone = "${var.a_zone_b}"
+
+  tags = {
+    Name = "ptfe-cloud-prod-mode-b"
   }
 }
 
