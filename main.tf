@@ -2,6 +2,7 @@ provider "aws" {}
 
 # Networking
 module "networking" {
+  ptfe_id = "${module.ec2.ptfe_id}"
   source = "./modules/networking/"
 }
 
@@ -23,6 +24,6 @@ module "silent" {
 
 # DNS
 module "dns" {
-  public_ip = "${module.ec2.ptfe_public_ip}"
+  alb_dns_name = "${module.networking.alb_dns_name}"
   source    = "./modules/dns/"
 }
