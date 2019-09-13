@@ -1,4 +1,4 @@
-data "template_file" "application-settings" {
+data "template_file" "application_settings" {
   template = "${file("${path.module}/templates/application-settings.json.tpl")}"
 
   vars = {
@@ -14,7 +14,7 @@ data "template_file" "replicated" {
   vars = {
     password      = "${var.dashboard_password}"
     settings_file = "/tmp/application-settings.json"
-    license_file  = "/tmp/license.rli"
+    license_file  = "/tmp/hashicorp-andrei-popa---tam.rli"
     fqdn          = "${var.fqdn}"
     tls_cert      = "/tmp/fullchain1.pem"
     tls_key       = "/tmp/privkey1.pem"
@@ -26,7 +26,7 @@ resource "null_resource" "silent" {
     type        = "ssh"
     user        = "ubuntu"
     host        = "${var.public_ip}"
-    private_key = "${file("cert.pem")}"
+    private_key = "${file("../ec2-keys/andrei.pem")}"
   }
   provisioner "file" {
     content     = "${data.template_file.replicated.rendered}"
