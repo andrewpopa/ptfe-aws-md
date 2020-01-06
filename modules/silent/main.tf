@@ -34,7 +34,7 @@ resource "null_resource" "silent" {
   }
 
   provisioner "file" {
-    content     = "${data.template_file.application-settings.rendered}"
+    content     = "${data.template_file.application_settings.rendered}"
     destination = "/tmp/application-settings.json"
   }
 
