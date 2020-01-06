@@ -39,12 +39,12 @@ export AWS_DEFAULT_REGION=
 check `modules/networking/variables.tf` you can modify the following parameters accordingly to your need 
 
 | **Name**  | **Default** | **Required** | **Description** |
-| ------------- | ------------- | ------------- | ------------- | ------------- |
-vpc_block | 172.16.0.0/16 | yes | VPC cidr
-sub_block_a | 172.16.11.0/24 | yes | sunbet A 
-sub_block_b | 172.16.11.0/24 | yes | subnet B
-a_zone_a | eu-central-1a | yes | AZ 
-a_zone_b | eu-central-1b | yes | AZ
+| ------------- | ------------- | ------------- | ------------- | 
+| vpc_block | 172.16.0.0/16 | yes | VPC cidr |
+| sub_block_a | 172.16.11.0/24 | yes | sunbet A |
+| sub_block_b | 172.16.11.0/24 | yes | subnet B |
+| a_zone_a | eu-central-1a | yes | AZ |
+| a_zone_b | eu-central-1b | yes | AZ|
 
 
 ## ec2 vars
@@ -52,7 +52,7 @@ a_zone_b | eu-central-1b | yes | AZ
 check `modules/ec2/variables.tf` and modify variables accordingly to your needs 
 
 | **Name**  | **Default** | **Required** | **Description** |
-| ------------- | ------------- | ------------- | ------------- | ------------- |
+| ------------- | ------------- | ------------- | ------------- |
 public_key |  | yes | Public key
 ami_type | ami-0085d4f8878cddc81 | yes | sunbet A 
 ec2_instance['type'] | m5.large | yes | EC instance type
@@ -69,7 +69,7 @@ ec2_instance['ebs_hdd_name2']  | eu-central-1b | yes | hdd2 name
 check `main.tf` under dns modules
 
 | **Name**  | **Default** | **Required** | **Description** |
-| ------------- | ------------- | ------------- | ------------- | ------------- |
+| ------------- | ------------- | ------------- | ------------- | 
 api_email | email@domain.com | yes | email which access cloudflare API
 api_token |  | yes | CloudFlare API token
 zone_id |  | yes | CloudFlare zone token
@@ -83,7 +83,7 @@ record_type  | CNAME | yes | cname record for load balancer
 check `modules/silent/variables.tf` and modify variables accordingly to your needs 
 
 | **Name**  | **Default** | **Required** | **Description** |
-| ------------- | ------------- | ------------- | ------------- | ------------- |
+| ------------- | ------------- | ------------- | ------------- | 
 dashboard_password | Password123# | yes | Initial password for PTFE dashboard
 
 # How to use this
