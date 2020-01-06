@@ -158,7 +158,7 @@ module.silent.data.template_file.replicated
 module.silent.null_resource.silent
 ```
 
-## Mark2 resources as taint 
+## Mark 2 resources as taint 
 so, at next `apply` this resources will be recreated
 
 ```
