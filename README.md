@@ -1,8 +1,8 @@
 # Description
 
-PTFE deploy in production mode on AWS using Terraform with mounted disk type of installation
+Monolithic terraform code which will deploy PTFE in production mode on AWS with mounted disk type of installation
 
-will use:
+will use mount points:
 - mounted disk for data to `/mountdisk`
 - mounted disk for snapshots to `/var/lib/replicated/snapshots`
 
@@ -34,41 +34,57 @@ export AWS_SECRET_ACCESS_KEY=
 export AWS_DEFAULT_REGION=
 ```
 
-## configure networking vars
+## networking vars
 
 check `modules/networking/variables.tf` you can modify the following parameters accordingly to your need 
-- vpc network
-- subnet
-- availability zone
 
-## configure ec2 vars
+| **Name**  | **Default** | **Required** | **Description** |
+| ------------- | ------------- | ------------- | ------------- | ------------- |
+vpc_block | 172.16.0.0/16 | yes | VPC cidr
+sub_block_a | 172.16.11.0/24 | yes | sunbet A 
+sub_block_b | 172.16.11.0/24 | yes | subnet B
+a_zone_a | eu-central-1a | yes | AZ 
+a_zone_b | eu-central-1b | yes | AZ
 
-make sure that you have pre-filled key name
-```bash
-variable "key_name" {}
-```
 
-and public ssh key for your ec2
-```bash
-variable "public_key" {}
-```
+## ec2 vars
 
-check `modules/ec2/variables.tf` and modify ec2 `map` accordingly to your need 
+check `modules/ec2/variables.tf` and modify variables accordingly to your needs 
 
-```bash
-variable "ec2_instance" {
-  type = "map"
-  default = {
-    "type"          = "m5.large"
-    "root_hdd_size" = 50
-    "root_hdd_type" = "gp2"
-    "ebs_hdd_size"  = 100
-    "ebs_hdd_type"  = "gp2"
-    "ebs_hdd_name1"  = "/dev/nvme1n1"
-    "ebs_hdd_name2"  = "/dev/nvme2n1"
-  }
-}
-```
+| **Name**  | **Default** | **Required** | **Description** |
+| ------------- | ------------- | ------------- | ------------- | ------------- |
+public_key |  | yes | Public key
+ami_type | ami-0085d4f8878cddc81 | yes | sunbet A 
+ec2_instance['type'] | m5.large | yes | EC instance type
+ec2_instance['root_hdd_size']  | 50 | yes | root hdd size 
+ec2_instance['root_hdd_type']  | gp2 | yes | root hdd type
+ec2_instance['ebs_hdd_size']  | eu-central-1b | yes | hdd size
+ec2_instance['ebs_hdd_type']  | eu-central-1b | yes | hdd type
+ec2_instance['ebs_hdd_name1']  | eu-central-1b | yes | hdd1 name
+ec2_instance['ebs_hdd_name2']  | eu-central-1b | yes | hdd2 name
+
+
+## dns vars
+
+check `main.tf` under dns modules
+
+| **Name**  | **Default** | **Required** | **Description** |
+| ------------- | ------------- | ------------- | ------------- | ------------- |
+api_email | email@domain.com | yes | email which access cloudflare API
+api_token |  | yes | CloudFlare API token
+zone_id |  | yes | CloudFlare zone token
+cf_domain  | gabrielaelena.me | yes | Domain managed by CF 
+cf_sub_domain  | ptfe | yes | Sub-domain managed by CF
+pointer | load-balancer-output | yes | Load balancer
+record_type  | CNAME | yes | cname record for load balancer
+
+# silent installation module
+
+check `modules/silent/variables.tf` and modify variables accordingly to your needs 
+
+| **Name**  | **Default** | **Required** | **Description** |
+| ------------- | ------------- | ------------- | ------------- | ------------- |
+dashboard_password | Password123# | yes | Initial password for PTFE dashboard
 
 # How to use this
 
@@ -87,117 +103,72 @@ terraform apply
 
 as an output you'll get `dns name` and `ip address` of your server
 
-## configure dns
 
-I'm using cloudflare as DNS provider. In your case can be something else. You need to point your domain which you'll use to ec2 instance which was created
+## Outputs
+| **Name**  | **Value** |
+| ------------- | ------------- |
+aws_ptfe_dns | dns-name-of-created-ec2-instance
+aws_ptfe_private_ip | private ip for ec2
+aws_ptfe_public_ip | public ip for ec2
+lb_dns | load balancer name
+ptfe_fqdn | FQDN where application can be reached
 
-![alt text](img/dns.png "DNS and Self Signed Certificate")
+# Failure imitation
 
-## cli install
+After the instance is created and you can login in it. The logic of the application is done in the way you can imitate application failure.
 
-one ec2 is provisioned, connect to the instance and run cli installer
+## Create snapshot
 
-```bash
-curl https://install.terraform.io/ptfe/stable | sudo bash
+You must create manual snapshot from admin panel.
+
+![alt text](img/create_snapshot.png "Create snapshot")
+
+After snapshot is done perform 
+
+`terraform state list`
+
+to see the state list of all resources which were created
+
+
+```
+module.dns.cloudflare_record.record_name
+module.ec2.aws_ebs_volume.ptfe_cloud_volume_db
+module.ec2.aws_ebs_volume.ptfe_cloud_volume_replica
+module.ec2.aws_instance.ptfe_cloud_prod_mode
+module.ec2.aws_key_pair.ec2
+module.ec2.aws_volume_attachment.ptfe_volume_db
+module.ec2.aws_volume_attachment.ptfe_volume_replica
+module.networking.aws_iam_server_certificate.ptfe_cert
+module.networking.aws_internet_gateway.main_gw
+module.networking.aws_lb.alb
+module.networking.aws_lb_listener.alb_listener_admin
+module.networking.aws_lb_listener.alb_listener_frontend
+module.networking.aws_lb_target_group.alb_target_admin
+module.networking.aws_lb_target_group.alb_target_frontend
+module.networking.aws_lb_target_group_attachment.alb_attach_admin
+module.networking.aws_lb_target_group_attachment.alb_attach_frontend
+module.networking.aws_main_route_table_association.main
+module.networking.aws_route_table.main_routing_table
+module.networking.aws_security_group.sg_cloud_prod_mode
+module.networking.aws_subnet.main_sub_a
+module.networking.aws_subnet.main_sub_b
+module.networking.aws_vpc.main_vpc
+module.silent.data.template_file.application_settings
+module.silent.data.template_file.replicated
+module.silent.null_resource.silent
 ```
 
-confirm ip address where will run PTFE and ignore(in out case) configuring proxy
+## Mark2 resources as taint 
+so, at next `apply` this resources will be recreated
 
-```bash
-Determining service address
-The installer will use service address 'xxx.xxx.xxx.xxx' (discovered from EC2 metadata service)
-The installer has automatically detected the service IP address of this machine as xxx.xxx.xxx.xxx
-Do you want to:
-[0] default: use xxx.xxx.xxx.xxx
-[1] enter new address
-Enter desired number (0-1): Does this machine require a proxy to access the Internet? (y/N)
+```
+➜  ptfe-aws-md git:(master) ✗ terraform taint module.ec2.aws_instance.ptfe_cloud_prod_mode
+Resource instance module.ec2.aws_instance.ptfe_cloud_prod_mode has been marked as tainted.
+➜  ptfe-aws-md git:(master) ✗ terraform taint module.silent.null_resource.silent
+Resource instance module.silent.null_resource.silent has been marked as tainted.
 ```
 
-## web browser configuration
+run `terraform apply`
 
-once cli installation is done, switch to web browser to continue installation
+After `apply` will be done, once you logged in back, the instance was restored automatically from snapshot which you created.
 
-go to [http://ptfe.gabrielaelena.me:8800](http://ptfe.gabrielaelena.me:8800)
-
-Accept the risk with
-
-![alt text](img/ssl_risk.png "SSL risk")
-
-## https for admin console
-
-upload your valid certificates. I got it from Letsencrypt using certbot
-
-![alt text](img/certs.png "SSL risk")
-
-## upload your license
-
-upload the license which you have from HashiCorp
-
-![alt text](img/lic.png "upload your license")
-
-## choose your installation type
-
-let's use online type of installation
-
-![alt text](img/install.png "choose your installation type")
-
-## secure the admin console
-
-use custom password for admin console
-
-![alt text](img/pwd.png "secure the admin console")
-
-## preflight checks
-
-make sure you pass all preglight checks 
-
-![alt text](img/pre.png "secure the admin console")
-
-## settings
-
-configure settings for your installation
-- make sure FQDN set properly
-- use custom password for encryption
-- choose installation type `production`
-- we will use mounted disk
-- specify the mountpoint for your mounted disk
-
-don't forget to press **Save** in the bottom of the page
-
-![alt text](img/prod.png "secure the admin console")
-
-## components
-
-wait until all components will be downloaded and application will start
-
-![alt text](img/comp.png "secure the admin console")
-
-## install complete
-
-once all components are downloaded and application is `started` you can open application
-
-also click on `Start snapshot` to create your first snapshot manually
-
-![alt text](img/done.png "secure the admin console")
-
-when you open your application create new user account
-
-![alt text](img/new.png "secure the admin console")
-
-## automatic snapshots
-
-after snapshot will be created
-
-![alt text](img/snap.png "start snapshot")
-
-go and configure automatic snapshots
-
-by going to - `console settings`
-
-click - `Enable Automatic Scheduled Snapshots`
-
-select - `Daily`
-
-![alt text](img/snap_auto.png "automatic snapshots")
-
-Enjoy!
