@@ -7,7 +7,7 @@ resource "aws_key_pair" "ec2" {
 resource "aws_instance" "ptfe_cloud_prod_mode" {
   ami                         = "${var.ami_type}"
   instance_type               = "${var.ec2_instance["type"]}"
-  vpc_security_group_ids      = "${var.vpc_security_group_ids}"
+  vpc_security_group_ids      = ["${var.vpc_security_group_ids}"]
   key_name                    = "${aws_key_pair.ec2.key_name}"
   subnet_id                   = "${var.subnet_id}"
   associate_public_ip_address = "true"
