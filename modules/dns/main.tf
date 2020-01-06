@@ -1,12 +1,13 @@
 provider "cloudflare" {
-  email = "${var.email}"
-  token = "${var.api_toke}"
+  version = "~> 2.0"
+  email   = "${var.api_email}"
+  api_key = "${var.api_token}"
 }
 
-resource "cloudflare_record" "ptfe" {
-  domain = "${var.domain}"
-  name   = "ptfe"
-  value  = "${var.alb_dns_name}"
-  type   = "CNAME"
-  ttl    = 1
+resource "cloudflare_record" "record_name" {
+  zone_id = "${var.zone_id}"
+  name    = "${var.cf_sub_domain}"
+  value   = "${var.pointer}"
+  type    = "${var.record_type}"
+  ttl     = 1
 }
