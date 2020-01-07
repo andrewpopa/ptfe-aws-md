@@ -6,6 +6,8 @@ will use mount points:
 - mounted disk for data to `/mountdisk`
 - mounted disk for snapshots to `/var/lib/replicated/snapshots`
 
+this repo require `terraform version 0.11`
+
 # Pre-requirements
 
 - [Terraform](https://www.terraform.io)
